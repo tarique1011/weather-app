@@ -131,8 +131,7 @@ class HomeScreen extends Component {
 const styles = {
 	container: {
 		flex: 1,
-		alignItems: 'center',
-		backgroundColor: Colors.backgroundBG
+		alignItems: 'center'
 	},
 	weatherCardContainer: {
 		margin: 20,

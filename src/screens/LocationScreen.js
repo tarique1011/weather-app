@@ -95,8 +95,7 @@ class LocationScreen extends Component {
 
 const styles = {
 	container: {
-		flex: 1,
-		backgroundColor: Colors.backgroundBG
+		flex: 1
 	},
 	headerStyle: {
 		height: 50,
