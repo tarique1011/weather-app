@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, Image, TouchableOpacity, AsyncStorage } from 'react-native';
+import { View, Text, Image, TouchableOpacity, AsyncStorage, ActivityIndicator } from 'react-native';
 import { connect } from 'react-redux';
 import axios from 'axios';
 import { Images, Colors } from '../res';
@@ -12,7 +12,8 @@ class HomeScreen extends Component {
 			weather_state_abbr: '',
 			applicable_date: '',
 			source: '',
-			quoteData: {}
+			quoteData: {},
+			isLoading: true
 		};
 	}
 
@@ -20,11 +21,11 @@ class HomeScreen extends Component {
 		axios.get(`https://www.metaweather.com/api/location/${this.props.city.cityData.woeid}`).then(res => {
 			const { weather_state_name, weather_state_abbr, applicable_date } = res.data.consolidated_weather[0];
 			this.setState({ weather_state_abbr, weather_state_name, applicable_date });
-		});
 
-		axios
-			.get('http://api.forismatic.com/api/1.0/?method=getQuote&format=json&lang=en')
-			.then(quoteData => this.setState({ quoteData: quoteData.data }));
+			axios
+				.get('http://api.forismatic.com/api/1.0/?method=getQuote&format=json&lang=en')
+				.then(quoteData => this.setState({ quoteData: quoteData.data, isLoading: false }));
+		});
 	}
 
 	onPressLocation = () => {
@@ -61,12 +62,25 @@ class HomeScreen extends Component {
 		);
 	}
 
-	renderQuoteContainer() {
+	renderQuoteView() {
 		return (
-			<View style={styles.quoteContainerStyle}>
+			<View>
 				<Text style={styles.quoteHeaderStyle}>Quote of the day</Text>
 				<Text style={styles.quoteTextStyle}>"{this.state.quoteData.quoteText}"</Text>
 				<Text style={styles.quoteAuthorStyle}>- {this.state.quoteData.quoteAuthor}</Text>
+			</View>
+		);
+	}
+
+	renderShareButtons() {
+		return <View />;
+	}
+
+	renderQuoteContainer() {
+		return (
+			<View style={styles.quoteContainerStyle}>
+				{this.renderQuoteView()}
+				{this.renderShareButtons()}
 			</View>
 		);
 	}
@@ -79,7 +93,20 @@ class HomeScreen extends Component {
 			</View>
 		);
 	}
+
+	renderSpinner() {
+		return (
+			<View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+				<Text style={{ fontSize: 20, marginVertical: 10 }}>Please Wait...</Text>
+				<ActivityIndicator size={40} color={'black'} />
+			</View>
+		);
+	}
 	render() {
+		if (this.state.isLoading) {
+			return this.renderSpinner();
+		}
+
 		return (
 			<View style={styles.container}>
 				{this.renderWeatherCard()}
