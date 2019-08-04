@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, FlatList, TextInput, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { View, Text, FlatList, TextInput, TouchableOpacity, ActivityIndicator, AsyncStorage } from 'react-native';
 import { SearchBar } from 'react-native-elements';
 import axios from 'axios';
 import { connect } from 'react-redux';
@@ -16,8 +16,18 @@ class LocationScreen extends Component {
 		this.renderItem = this.renderItem.bind(this);
 	}
 
-	onPress(item) {
+	async componentDidMount() {
+		const cityToken = await AsyncStorage.getItem('city');
+
+		if (cityToken) {
+			this.props.updateCityData(JSON.parse(cityToken));
+			this.props.navigation.navigate('Home');
+		}
+	}
+
+	async onPress(item) {
 		this.props.updateCityData(item);
+		await AsyncStorage.setItem('city', JSON.stringify(item));
 		this.props.navigation.navigate('Home');
 	}
 
@@ -43,12 +53,20 @@ class LocationScreen extends Component {
 		);
 	}
 
-	renderHeader() {
-		return <SearchBar placeholder="Type Here..." onChangeText={this.updateCity} value={this.state.city} />;
-	}
-
 	renderFlatList() {
 		return <FlatList data={this.state.data} renderItem={this.renderItem} keyExtractor={(item, index) => index} />;
+	}
+
+	renderHeader() {
+		return (
+			<View style={styles.headerStyle}>
+				<Text style={styles.headerTextStyle}>Select your Location</Text>
+			</View>
+		);
+	}
+
+	renderSearchBar() {
+		return <SearchBar lightTheme placeholder="Type Here..." onChangeText={this.updateCity} value={this.state.city} />;
 	}
 
 	renderBottomContainer() {
@@ -67,6 +85,7 @@ class LocationScreen extends Component {
 		return (
 			<View style={styles.container}>
 				{this.renderHeader()}
+				{this.renderSearchBar()}
 				{this.renderBottomContainer()}
 			</View>
 		);
@@ -76,6 +95,17 @@ class LocationScreen extends Component {
 const styles = {
 	container: {
 		flex: 1
+	},
+	headerStyle: {
+		height: 50,
+		padding: 20,
+		justifyContent: 'center'
+	},
+	headerTextStyle: {
+		fontSize: 25,
+		color: 'black',
+		fontWeight: '500',
+		fontFamily: 'Roboto'
 	},
 	cellStyle: {
 		height: 50,
