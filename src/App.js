@@ -16,6 +16,8 @@ class App extends Component {
 	}
 }
 
+console.disableYellowBox = true;
+
 const styles = {
 	container: {
 		flex: 1

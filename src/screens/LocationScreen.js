@@ -3,6 +3,7 @@ import { View, Text, FlatList, TouchableOpacity, ActivityIndicator, AsyncStorage
 import { SearchBar } from 'react-native-elements';
 import axios from 'axios';
 import { connect } from 'react-redux';
+import { Colors } from '../res';
 import { updateCityData } from '../actions';
 
 class LocationScreen extends Component {
@@ -14,15 +15,6 @@ class LocationScreen extends Component {
 			isLoading: false
 		};
 		this.renderItem = this.renderItem.bind(this);
-	}
-
-	async componentDidMount() {
-		const cityToken = await AsyncStorage.getItem('city');
-
-		if (cityToken) {
-			this.props.updateCityData(JSON.parse(cityToken));
-			this.props.navigation.navigate('Home');
-		}
 	}
 
 	async onPress(item) {
@@ -67,7 +59,15 @@ class LocationScreen extends Component {
 	}
 
 	renderSearchBar() {
-		return <SearchBar lightTheme placeholder="Type Here..." onChangeText={this.updateCity} value={this.state.city} />;
+		return (
+			<SearchBar
+				lightTheme
+				placeholder="Type Here..."
+				onChangeText={this.updateCity}
+				value={this.state.city}
+				inputContainerStyle={{ borderRadius: 30 }}
+			/>
+		);
 	}
 
 	renderBottomContainer() {
@@ -95,7 +95,8 @@ class LocationScreen extends Component {
 
 const styles = {
 	container: {
-		flex: 1
+		flex: 1,
+		backgroundColor: Colors.backgroundBG
 	},
 	headerStyle: {
 		height: 50,

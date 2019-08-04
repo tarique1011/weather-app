@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { View, Text, Image, TouchableOpacity, AsyncStorage, ActivityIndicator } from 'react-native';
 import { connect } from 'react-redux';
 import axios from 'axios';
+import Share from 'react-native-share';
 import { Images, Colors } from '../res';
 
 class HomeScreen extends Component {
@@ -33,15 +34,22 @@ class HomeScreen extends Component {
 		this.props.navigation.navigate('Location');
 	};
 
+	shareQuote = () => {
+		const shareOptions = {
+			title: 'Share via',
+			url: this.state.quoteData.quoteLink
+		};
+		Share.open(shareOptions);
+	};
+
 	renderWeatherCardHeader() {
 		return (
 			<View style={styles.weatherCardHeaderStyle}>
-				<View style={{ flex: 1, flexDirection: 'row' }}>
+				<TouchableOpacity style={{ flex: 1, flexDirection: 'row' }} onPress={this.onPressLocation}>
 					<Text style={styles.cityTextStyle}>{this.props.city.cityData.title}</Text>
-					<TouchableOpacity onPress={this.onPressLocation}>
-						<Image source={Images.location} style={styles.locationImageStyle} resizeMode="contain" />
-					</TouchableOpacity>
-				</View>
+					<Image source={Images.location} style={styles.locationImageStyle} resizeMode="contain" />
+				</TouchableOpacity>
+
 				<Text style={{ fontSize: 20 }}>{this.state.applicable_date}</Text>
 			</View>
 		);
@@ -72,8 +80,12 @@ class HomeScreen extends Component {
 		);
 	}
 
-	renderShareButtons() {
-		return <View />;
+	renderShareButton() {
+		return (
+			<TouchableOpacity onPress={this.shareQuote} style={styles.shareButtonStyle}>
+				<Text style={styles.shareButtonTextStyle}>Share</Text>
+			</TouchableOpacity>
+		);
 	}
 
 	renderWeatherCard() {
@@ -89,7 +101,7 @@ class HomeScreen extends Component {
 		return (
 			<View style={styles.quoteContainerStyle}>
 				{this.renderQuoteView()}
-				{this.renderShareButtons()}
+				{this.renderShareButton()}
 			</View>
 		);
 	}
@@ -119,7 +131,8 @@ class HomeScreen extends Component {
 const styles = {
 	container: {
 		flex: 1,
-		alignItems: 'center'
+		alignItems: 'center',
+		backgroundColor: Colors.backgroundBG
 	},
 	weatherCardContainer: {
 		margin: 20,
@@ -158,26 +171,48 @@ const styles = {
 		width: '90%',
 		padding: 10,
 		marginTop: 20,
-		borderWidth: 1,
-		borderRadius: 5
+		borderWidth: 2,
+		borderRadius: 8
 	},
 	quoteHeaderStyle: {
-		fontSize: 20,
-		fontWeight: '500',
+		fontSize: 22,
 		fontFamily: 'Roboto',
 		marginVertical: 10,
 		color: Colors.black
 	},
 	quoteTextStyle: {
+		marginTop: 10,
+		fontWeight: '400',
 		fontSize: 28,
 		fontStyle: 'italic',
-		color: Colors.blue
+		color: Colors.black
 	},
 	quoteAuthorStyle: {
 		fontSize: 18,
+		fontWeight: '400',
 		fontStyle: 'italic',
 		alignSelf: 'flex-end',
 		marginTop: 5
+	},
+	shareButtonStyle: {
+		marginTop: 30,
+		marginBottom: 5,
+		alignSelf: 'center',
+		width: '80%',
+		height: 40,
+		borderRadius: 5,
+		borderWidth: 2,
+		borderColor: Colors.blue,
+		justifyContent: 'center',
+		alignItems: 'center',
+		backgroundColor: Colors.white,
+		elevation: 5
+	},
+	shareButtonTextStyle: {
+		fontSize: 18,
+		fontFamily: 'Roboto',
+		fontWeight: '500',
+		color: Colors.blue
 	}
 };
 
