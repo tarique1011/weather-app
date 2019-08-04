@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, FlatList, TextInput, TouchableOpacity, ActivityIndicator, AsyncStorage } from 'react-native';
+import { View, Text, FlatList, TouchableOpacity, ActivityIndicator, AsyncStorage } from 'react-native';
 import { SearchBar } from 'react-native-elements';
 import axios from 'axios';
 import { connect } from 'react-redux';
@@ -34,9 +34,10 @@ class LocationScreen extends Component {
 	updateCity = async city => {
 		this.setState({ isLoading: true });
 		await this.setState({ city });
+
 		let cityName = this.state.city;
 		cityName = cityName.toLowerCase();
-		console.log(cityName);
+
 		axios
 			.get(`https://www.metaweather.com/api/location/search/?query=${cityName}`)
 			.then(res => this.setState({ data: res.data, isLoading: false }))

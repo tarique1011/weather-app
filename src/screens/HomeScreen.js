@@ -76,20 +76,20 @@ class HomeScreen extends Component {
 		return <View />;
 	}
 
-	renderQuoteContainer() {
-		return (
-			<View style={styles.quoteContainerStyle}>
-				{this.renderQuoteView()}
-				{this.renderShareButtons()}
-			</View>
-		);
-	}
-
 	renderWeatherCard() {
 		return (
 			<View style={styles.weatherCardContainer}>
 				{this.renderWeatherCardHeader()}
 				{this.renderWeatherInfo()}
+			</View>
+		);
+	}
+
+	renderQuoteContainer() {
+		return (
+			<View style={styles.quoteContainerStyle}>
+				{this.renderQuoteView()}
+				{this.renderShareButtons()}
 			</View>
 		);
 	}
@@ -126,8 +126,7 @@ const styles = {
 		height: 200,
 		width: '90%',
 		padding: 10,
-		borderRadius: 5,
-		borderWidth: 1
+		borderRadius: 5
 	},
 	weatherCardHeaderStyle: {
 		flex: 1,
